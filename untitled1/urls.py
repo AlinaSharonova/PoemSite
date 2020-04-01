@@ -16,8 +16,9 @@ Including another URLconf
 #содержит список шаблонов, по которым ориентируется urlresolver
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('inspiration.urls')),
 ]
