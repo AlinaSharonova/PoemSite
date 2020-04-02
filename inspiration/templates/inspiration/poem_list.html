@@ -6,13 +6,13 @@
         <p>Hi there!</p>
         <p>It is  list of poems!</p>
 
-    {% for poem in poems %}
-        <div>
-            <p>published: {{ poem.published_date }}</p>
-            <h1><a href="">{{ poem.title }}</a></h1>
-            <p>{{ poem.text|linebreaksbr }}</p>
-        </div>
-    {% endfor %}
+        {% for poem in poems %}
+            <div>
+                <p>published: {{ poem.published_date }}</p>
+                <h1><a href="">{{ poem.title }}</a></h1>
+                <p>{{ poem.text|linebreaksbr }}</p>
+            </div>
+        {% endfor %}
 
     </body>
 </html>
