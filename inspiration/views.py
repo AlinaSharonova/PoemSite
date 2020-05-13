@@ -1,12 +1,20 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from .models import Poem
-from .forms import PoemForm
+from .forms import PoemForm #PoemFilterForm
 from django.shortcuts import redirect
 
 # Create your views here.
 def poem_list(request):
-    poems = Poem.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    poems = Poem.objects.all()
+
+    # Фильтрация для пользователя
+    #form = PoemFilterForm(request.GET)
+
+    # if form.is_valid():
+    #     if form.cleaned_data["ordering"]:
+    #         poems = poems.order_by(form.cleaned_data["ordering"])
+
     return render(request, 'inspiration/poem_list.html', {'poems': poems})
 
 
