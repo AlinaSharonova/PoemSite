@@ -1,13 +1,13 @@
 {% extends 'inspiration/base.html' %}
 
 {% block content %}
-    {% for post in posts %}
+    {% for poem in poems %}
         <div class="post">
             <div class="date">
-                {{ post.published_date }}
+                {{ poem.published_date }}
             </div>
-            <h1><a href="{% url 'poem_detail' pk=poem.pk %}">{{ poem.title }}</a></h1>
-            <p>{{ post.text|linebreaksbr }}</p>
+            <h1><a href="{{ poem.id }}">{{ poem.title }}</a></h1>
+            <p>{{ poem.text|linebreaksbr }}</p>
         </div>
     {% endfor %}
 {% endblock %}

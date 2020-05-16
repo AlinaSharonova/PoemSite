@@ -6,6 +6,13 @@ from django.db import models
 from django.utils import timezone
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    date_of_birth = models.DateField(blank=True, null=True)
+    photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True)
+
+    def __str__(self):
+        return 'Profile for user {}'.format(self.user.username)
 
 class Poem(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -38,9 +45,11 @@ class CommentPoem(models.Model):
     text = models.TextField("Текст комментария", max_length=300)
     created = models.DateTimeField(auto_now_add=True)
 
+    title = str(title_poem)
+
     def publish(self):
         self.created = timezone.now()
         self.save()
 
     def __str__(self):
-        return self.title_poem
+        return self.title
