@@ -1,10 +1,7 @@
 # Register your models here.
 from django.contrib import admin
-from .models import Poem, CommentPoem, Profile
+from .models import Poem, CommentPoem
 
-
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'photo', 'date_of_birth']
 
 class PoemAdmin(admin.ModelAdmin):
      list_display = ("id", "title", "author", "category", "owner", "published_date")
@@ -21,6 +18,5 @@ class CommentPoemAdmin(admin.ModelAdmin):
    #readonly_fields = ("user",)
 
 
-admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Poem, PoemAdmin)
 admin.site.register(CommentPoem, CommentPoemAdmin)

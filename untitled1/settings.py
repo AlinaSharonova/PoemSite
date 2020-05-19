@@ -38,8 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'inspiration'
+    'inspiration',
+    'basis',
+    'crispy_forms',
+    'widget_tweaks'
 ]
+
+AUTH_USER_MODEL = 'basis.User'
+DEBUG_PROPAGATE_EXCEPTIONS = False
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+BOOTSTRAP4 = {'include_jquery': True}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

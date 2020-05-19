@@ -1,25 +1,16 @@
 # Create your models here.
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date_of_birth = models.DateField(blank=True, null=True)
-    photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True)
-
-    def __str__(self):
-        return 'Profile for user {}'.format(self.user.username)
-
 class Poem(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_owner')
     author = models.CharField(max_length=60)
     title = models.CharField(max_length=200)
     text = models.TextField()
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(upload_to="media/poem", blank=True, null=True)
     day = models.PositiveSmallIntegerField(blank=True, null=True)
     month = models.PositiveSmallIntegerField(blank=True, null=True)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -40,8 +31,8 @@ class Poem(models.Model):
 
 
 class CommentPoem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="Пользователь", on_delete=models.CASCADE)
-    title_poem = models.ForeignKey(Poem, verbose_name="Название стихотворения", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_comment',) #verbose_name="Пользователь"
+    title_poem = models.ForeignKey(Poem, on_delete=models.CASCADE, related_name='title_poem_comment',) #verbose_name="Название стихотворения"
     text = models.TextField("Текст комментария", max_length=300)
     created = models.DateTimeField(auto_now_add=True)
 

@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.conf.urls import url
+from django.conf.urls.static import static
 from django.urls import path, include
 from . import views
 
@@ -9,6 +11,6 @@ urlpatterns = [
     path('poem/new/', views.poem_new, name='poem_new'),
     path('poem/<int:pk>/edit/', views.poem_edit, name='poem _edit'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('edit/', views.edit, name='edit_profile'),
-    path('register/', views.register, name='register'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,23 @@
+{% load static %}
+<div class="d-flex flex-column flex-md-row align-items-center p-2 px-md-3 mb-2 bg-white border-bottom shadow-sm">
+{#    <img src="{% static 'basis/images/inspire.png' %}" class="img-fluid" alt="hanger">#}
+    <h2 class="my-0 mr-md-auto font-weight-normal">inspire</h2>
+    <a class="btn btn-outline-primary m-1" href="{% url 'inspiration:poem_list' %}">Main <span class="sr-only">(current)</span></a>
+{#    <a class="btn btn-outline-info m-1" href="{% url 'basis:info' %}">About us <span#}
+{#            class="sr-only">(current)</span></a>#}
+
+    <nav class="my-2 my-md-0 mr-md-3 ">
+
+        {% if user.is_authenticated %}
+            <a class="btn btn-outline-dark m-1" href="{% url 'inspiration:poem_my_list' %}">My poems <span class="sr-only">(current)</span></a>
+             <a class="btn btn-outline-primary m-1" href="{% url 'inspiration:poem_new' %}">Create new post <span class="sr-only">(current)</span></a>
+             <a class="btn btn-outline-info m-1" href="{% url 'inspiration:edit_profile' %}">Profile <span class="sr-only">(current)</span></a>
+            <a class="btn btn-outline-danger" href="{% url 'basis:logout' %}">Log out</a>
+        {% else %}
+            <a class="btn btn-outline-success m-1" href="{% url 'basis:login' %}">Sign in</a>
+            <a class="btn btn-outline-primary" href="{% url 'basis:register' %}">Sign up</a>
+        {% endif %}
+
+
+    </nav>
+</div>

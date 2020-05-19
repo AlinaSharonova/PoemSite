@@ -9,26 +9,27 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import FormView, TemplateView
 
-from basis.forms import CreativeUserForm, CreativeUserChangeForm, PasswordResetRequestForm
+from basis.forms import CreativeUserForm, CreativeUserChangeForm #PasswordResetRequestForm
 from basis.models import User, UserToken
+#from basis.tasks import send_email_task
 
 
-def index(request):
-    return render(request, 'index.html', {})
+def home(request):
+    return render(request, 'base.html', {})
 
 
 def logout_view(request):
     logout(request)
-    return redirect('main:index')
+    return redirect('inspiration:poem_list')
 
 
-def error_500(request):
-    return render(request, '500.html', {})
+#def error_500(request):
+#    return render(request, '500.html', {})
 
 
 class RegisterView(View):
     def get(self, request):
-        return render(request, 'basis/templates/registration.html', {'form': CreativeUserForm()})
+        return render(request, 'basis/registration.html', {'form': CreativeUserForm()})
 
     def post(self, request):
         form = CreativeUserForm(request.POST, request.FILES)
@@ -37,12 +38,12 @@ class RegisterView(View):
             form.save_m2m()
             return redirect(reverse('main:login'))
 
-        return render(request, 'basis/templates/registration.html', {'form': form})
+        return render(request, 'basis/registration.html', {'form': form})
 
 
 class LoginView(View):
     def get(self, request):
-        return render(request, 'basis/templates/login.html', {'form': AuthenticationForm})
+        return render(request, 'basis/login.html', {'form': AuthenticationForm})
 
     def post(self, request):
         form = AuthenticationForm(request, data=request.POST)
@@ -56,7 +57,7 @@ class LoginView(View):
             if user is None:
                 return render(
                     request,
-                    'basis/templates/login.html',
+                    'basis/login.html',
                     {'form': form, 'invalid_creds': True}
                 )
 
@@ -65,7 +66,7 @@ class LoginView(View):
             except ValidationError:
                 return render(
                     request,
-                    'basis/templates/login.html',
+                    'basis/login.html',
                     {'form': form, 'invalid_creds': True}
                 )
             login(request, user)
@@ -86,39 +87,39 @@ class ProfileChangeView(LoginRequiredMixin, View):
         form = CreativeUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             user = form.save()
-            return redirect(reverse('main:profile'))
+            return redirect(reverse('basis:profile'))
 
         return render(request, 'basis/profile_edit.html', {'form': form})
 
 
 
-class ResetPasswordRequestView(FormView):
-    template_name = 'main/reset.html'
-    form_class = PasswordResetRequestForm
-    success_url = reverse_lazy('main:reset_redirect_message')
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data["email"]
-            user = User.objects.get(email=data)
-            token_raw = default_token_generator.make_token(user)
-            UserToken.objects.create(user=user, token=token_raw)
-            reset_password_link = str('http://localhost:8000') + reverse('main:reset',
-                                                                         kwargs={
-                                                                             'username': user.username,
-                                                                             'token': token_raw
-                                                                         }
-                                                                         )
-
-            send_email_task.delay(
-                subject='Reset password',
-                to_email=user.email,
-                from_email=settings.EMAIL_HOST_USER,
-                template='main/reset_message.html',
-                args={'url': reset_password_link}
-            )
-        return self.form_valid(form)
+# class ResetPasswordRequestView(FormView):
+#     template_name = 'basis/reset.html'
+#     form_class = PasswordResetRequestForm
+#     success_url = reverse_lazy('basis:reset_redirect_message')
+#
+#     def post(self, request, *args, **kwargs):
+#         form = self.form_class(request.POST)
+#         if form.is_valid():
+#             data = form.cleaned_data["email"]
+#             user = User.objects.get(email=data)
+#             token_raw = default_token_generator.make_token(user)
+#             UserToken.objects.create(user=user, token=token_raw)
+#             reset_password_link = str('http://localhost:8000') + reverse('basis:reset',
+#                                                                          kwargs={
+#                                                                              'username': user.username,
+#                                                                              'token': token_raw
+#                                                                          }
+#                                                                          )
+#
+#             send_email_task(
+#                 subject='Reset password',
+#                 to_email=user.email,
+#                 from_email=settings.EMAIL_HOST_USER,
+#                 template='basis/reset_message.html',
+#                 args={'url': reset_password_link}
+#             ).delay
+#         return self.form_valid(form)
 
 
 class UserResetPasswordAccessMixin(AccessMixin):
@@ -134,26 +135,26 @@ class UserResetPasswordAccessMixin(AccessMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ResetPasswordView(UserResetPasswordAccessMixin, FormView):
-    form_class = PasswordResetForm
-    template_name = 'basis/reset_conf.html'
-    success_url = reverse_lazy('main:login')
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data["password"]
-            username = kwargs['username']
-            token = kwargs['token']
-            user_token = UserToken.objects.get(user__username=username, token=token)
-
-            user = user_token.user
-            user.set_password(data)
-            user.save()
-
-            user_token.delete()
-
-        return self.form_valid(form)
+# class ResetPasswordView(UserResetPasswordAccessMixin, FormView):
+# #     form_class = PasswordResetForm
+# #     template_name = 'basis/reset_conf.html'
+# #     success_url = reverse_lazy('basis:login')
+# #
+# #     def post(self, request, *args, **kwargs):
+# #         form = self.form_class(request.POST)
+# #         if form.is_valid():
+# #             data = form.cleaned_data["password"]
+# #             username = kwargs['username']
+# #             token = kwargs['token']
+# #             user_token = UserToken.objects.get(user__username=username, token=token)
+# #
+# #             user = user_token.user
+# #             user.set_password(data)
+# #             user.save()
+# #
+# #             user_token.delete()
+# #
+# #         return self.form_valid(form)
 
 
 class MessageSentView(TemplateView):
