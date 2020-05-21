@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from mongoengine import Q
 
 from inspiration.forms import CommentPoemForm, PoemForm
 from .models import Poem, CommentPoem
@@ -40,7 +40,7 @@ def poem_new(request):
             poem.owner = request.user
             poem.published_date = timezone.now()
             poem.save()
-            return redirect('poem', pk=poem.pk)
+            return redirect('inspiration:poem_detail', pk=poem.pk)
    # else:
         #form = PoemForm()
     return render(request, 'inspiration/poem_edit.html', {'form': form})
@@ -60,7 +60,9 @@ def poem_edit(request, pk):
     return render(request, 'inspiration/poem_edit.html', {'form': form})
 
 def poem_lovesad(request):
-    poems = Poem.objects.filter(Q(Poem.category == 'LOVE') | Q(Poem.category == 'SAD')).order_by('-published_date')
+    mod1 = 'LOVE'
+    mod2 = 'SAD'
+    poems = Poem.objects.filter(Q(category__icontains=mod1) | Q(category__icontains=mod2)).order_by('-published_date')
     return render(request, 'inspiration/poem_lovesad.html', {'poems': poems})
 
 
@@ -74,4 +76,4 @@ def comment(request):
             comment.created = timezone.now()
             comment.save()
             return redirect('poem', pk=comment.pk)
-    return render(request, 'inspiration/poem_edit.html', {'form': form})
+    return render(request, 'inspiration/poem_detail.html', {'form': form})

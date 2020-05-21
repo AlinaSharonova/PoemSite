@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'basis',
     'crispy_forms',
     'widget_tweaks',
-    'rest_framework_swager'
+    'rest_framework_swagger',
+    'drf_yasg',
 ]
 
 AUTH_USER_MODEL = 'basis.User'

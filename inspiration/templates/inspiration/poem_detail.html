@@ -12,16 +12,21 @@
 {#        <a class="btn btn-default" href ="edit">><span class="glyphicon glyphicon-pencil"></span></a>#}
         <h1>{{ poem.title }}</h1>
         <p>{{ poem.text|linebreaksbr }}</p> <hr>
+        {% if poem.image %}
+                    <p class="image" style="max-height: 500px; max-width: 500px "><img src="{{ poem.image.url }}" id="image" alt="image"></p>
+                {% endif %}
         {% for comment in comments%}
             User: <p><a href="http://127.0.0.1:8000/profile">{{ comment.user }} </a></p><br><br>
             {{ comment.text }}<br>
             Date:{{ comment.created }}<br><br>
         {% endfor %}
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form.as_p}}
-            <button type="submit">Send</button>
-        </form>
+        {% if user.is_authenticated %}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+                <button type="submit">Send</button>
+            </form>
+        {% endif %}
 {#        <p class="image"><img src="{{ poem.image.url }}" id="self_photo" alt="image"></p>#}
     </div>
 {% endblock %}

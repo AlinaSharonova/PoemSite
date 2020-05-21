@@ -2,12 +2,13 @@
 {% load widget_tweaks %}
 
 {% block content %}
-
         <h2 class="subtitle is-size-3" align="center">
             Welcome, dear {{ request.user.username }}
         </h2>
     <div class="container">
-     Photo: <p>{{ user.photo}}</p> <br>
+     Photo: {% if user.photo %}
+                    <p class="image" style="height: 500px; width: 500px "><img src="{{ user.photo.url }}" id="photo" alt="photo"></p>
+                {% endif %}
      Username: <p>{{ user.username }}</p> <br>
      First name: <p>{{ user.first_name }}</p> <br>
      Last name: <p>{{ user.last_name }}</p> <br>

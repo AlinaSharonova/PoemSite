@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from rest_framework_swagger.views import get_swagger_view
 
 from basis import views
 #from basis.views import ResetPasswordRequestView, ResetPasswordView, MessageSentView
+from basis.views import AllSectionsView, SingleUserView
 
 app_name = 'basis'
 
@@ -17,6 +17,8 @@ urlpatterns=[
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('profile/edit/', views.ProfileChangeView.as_view(), name='profile_edit'),
     path('logout/', views.logout_view, name='logout'),
+    path('users/', AllSectionsView.as_view(), name='users'),
+    path('user/<int:pk>', SingleUserView.as_view(), name='user')
     #path('user/<int:pk>/', views.profile, name='profile'),
     #path('about/', views.home, name='info'),
     #path('api/', include(router.urls)),
@@ -28,8 +30,3 @@ urlpatterns=[
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #handler500 = 'basis.views.error_500'
-
-schema_view = get_swagger_view(title='Swagger for Inspiration Blog')
-urlpatterns = [
-    path('swagger/', schema_view)
-]

@@ -1,3 +1,5 @@
+
+
 from django.conf import settings
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
@@ -8,9 +10,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import FormView, TemplateView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from basis.forms import CreativeUserForm, CreativeUserChangeForm #PasswordResetRequestForm
-from basis.models import User, UserToken
+from basis.models import User, UserToken, UserSerializer
+
+
 #from basis.tasks import send_email_task
 
 
@@ -20,8 +25,8 @@ def home(request):
 def info(request):
     return render(request, 'inspiration/about.html', {})
 
-# def profile(request):
-#     return render(request, 'basis/profile.html', {})
+def profile(request):
+    return render(request, 'basis/profile.html', {})
 
 def logout_view(request):
     logout(request)
@@ -41,7 +46,7 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save(True)
             form.save_m2m()
-            return redirect(reverse('basis:login'))
+            return redirect(reverse('basis/profile.html'))
 
         return render(request, 'basis/registration.html', {'form': form})
 
@@ -92,7 +97,7 @@ class ProfileChangeView(LoginRequiredMixin, View):
         form = CreativeUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             user = form.save()
-            return redirect(reverse('basis:profile'))
+            return redirect(reverse('basis/profile.html'))
 
         return render(request, 'basis/profile_edit.html', {'form': form})
 
@@ -164,3 +169,17 @@ class UserResetPasswordAccessMixin(AccessMixin):
 
 class MessageSentView(TemplateView):
     template_name = 'basis/message_sent.html'
+
+
+
+class AllSectionsView(ListCreateAPIView):
+    profile = User.objects.all()
+    serializer_class = UserSerializer
+
+    def perform_create(self, serializer):
+        return serializer.save()
+
+
+class SingleUserView(RetrieveUpdateDestroyAPIView):
+    user = User.objects.all()
+    serializer_class = UserSerializer
