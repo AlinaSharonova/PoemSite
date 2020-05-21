@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'inspiration',
     'basis',
     'crispy_forms',
-    'widget_tweaks'
+    'widget_tweaks',
+    'rest_framework_swager'
 ]
 
 AUTH_USER_MODEL = 'basis.User'

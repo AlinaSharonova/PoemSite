@@ -1,5 +1,4 @@
 # Create your models here.
-
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -32,15 +31,13 @@ class Poem(models.Model):
 
 class CommentPoem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_comment',) #verbose_name="Пользователь"
-    title_poem = models.ForeignKey(Poem, on_delete=models.CASCADE, related_name='title_poem_comment',) #verbose_name="Название стихотворения"
+    id_poem = models.ForeignKey(Poem, on_delete=models.CASCADE, related_name='poem_comment', default=None)
     text = models.TextField("Текст комментария", max_length=300)
     created = models.DateTimeField(auto_now_add=True)
-
-    title = str(title_poem)
 
     def publish(self):
         self.created = timezone.now()
         self.save()
 
     def __str__(self):
-        return self.title
+        return self.text

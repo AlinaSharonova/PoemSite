@@ -1,15 +1,27 @@
-{% extends 'inspiration/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
     <div class="container">
         {% if poem.published_date %}
             <div class="date">
                 {{ poem.published_date }}
+            <br>
+            <h1>{{ poem.owner }}</h1>
             </div>
         {% endif %}
-        <a class="btn btn-default" href ="edit">><span class="glyphicon glyphicon-pencil"></span></a>
+{#        <a class="btn btn-default" href ="edit">><span class="glyphicon glyphicon-pencil"></span></a>#}
         <h1>{{ poem.title }}</h1>
-        <p>{{ poem.text|linebreaksbr }}</p>
+        <p>{{ poem.text|linebreaksbr }}</p> <hr>
+        {% for comment in comments%}
+            User: <p><a href="http://127.0.0.1:8000/profile">{{ comment.user }} </a></p><br><br>
+            {{ comment.text }}<br>
+            Date:{{ comment.created }}<br><br>
+        {% endfor %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <button type="submit">Send</button>
+        </form>
 {#        <p class="image"><img src="{{ poem.image.url }}" id="self_photo" alt="image"></p>#}
     </div>
 {% endblock %}

@@ -17,14 +17,19 @@ from basis.models import User, UserToken
 def home(request):
     return render(request, 'base.html', {})
 
+def info(request):
+    return render(request, 'inspiration/about.html', {})
+
+# def profile(request):
+#     return render(request, 'basis/profile.html', {})
 
 def logout_view(request):
     logout(request)
     return redirect('inspiration:poem_list')
 
 
-#def error_500(request):
-#    return render(request, '500.html', {})
+# def error_500(request):
+#     return render(request, '500.html', {})
 
 
 class RegisterView(View):
@@ -36,7 +41,7 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save(True)
             form.save_m2m()
-            return redirect(reverse('main:login'))
+            return redirect(reverse('basis:login'))
 
         return render(request, 'basis/registration.html', {'form': form})
 
@@ -71,7 +76,7 @@ class LoginView(View):
                 )
             login(request, user)
 
-            return redirect(reverse('main:profile'))
+            return redirect(reverse('basis:profile'))
 
 
 class ProfileView(LoginRequiredMixin, View):

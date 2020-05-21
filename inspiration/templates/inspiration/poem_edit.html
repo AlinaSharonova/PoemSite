@@ -1,9 +1,9 @@
-{% extends 'inspiration/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
     <h1>New poem</h1>
     <form method="POST" class="post-form">{% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save poem</button>
+        <button type="submit" class="save btn btn-default" style="border-color: blueviolet">Save poem</button>
     </form>
 {% endblock %}

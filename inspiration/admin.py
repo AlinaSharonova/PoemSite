@@ -9,13 +9,25 @@ class PoemAdmin(admin.ModelAdmin):
      list_filter = ("category", "author", "owner")
      search_fields = ("title", "author")
      ordering = ('author', 'owner', 'published_date')
-     #readonly_fields = ("owner",)
+     exclude = ('owner',)
+
+     def save_model(self, request, obj, form, change):
+         if not obj.pk:
+             obj.owner = request.user
+         super().save_model(request, obj, form, change)
 
 
 class CommentPoemAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "title_poem", "created")
-    list_display_links = ("title_poem",)
-   #readonly_fields = ("user",)
+    list_display = ("id", "user", "id_poem", "created")
+    list_display_links = ("id_poem",)
+    list_filter = ( "user", "id_poem")
+    search_fields = ("id_poem", "user")
+    ordering = ('user', 'id_poem', 'created')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.user = request.user
+        super().save_model(request, obj, form, change)
 
 
 admin.site.register(Poem, PoemAdmin)

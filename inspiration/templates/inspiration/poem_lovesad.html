@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for poem in poems %}
+        <div class="post">
+            <div class="date">
+                {{ poem.published_date }}
+                <br>
+            </div>
+            <h3>{{ poem.owner }} </h3>
+            <h1><a href="{{ poem.id }}">{{ poem.title }}</a></h1>
+            <p>{{ poem.text|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
